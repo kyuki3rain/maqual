@@ -14,6 +14,7 @@ class Container extends React.Component {
     render() {
         return (
         <Style>
+            <Text>{this.props.time}</Text>
             {this.props.formula}
         </Style>
         );
@@ -21,6 +22,6 @@ class Container extends React.Component {
 }
 
 export default connect(
-    state => ({ formula:state.gameStates.formula }),
+    state => ({ formula:state.gameStates.formula,time:state.secs }),
     {  }
 )(Container);

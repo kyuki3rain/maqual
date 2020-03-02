@@ -1,9 +1,9 @@
 import React from 'react';
 import styled from 'styled-components/native';
 import { connect } from 'react-redux';
-import {setGame,selectGame} from "../actions";
+import {setGame,backHome} from "../actions";
 import { Dimensions } from 'react-native';
-import { Button } from "./common-styles";
+import {Button} from "./common-styles";
 
 const Body = styled.View`
     flex:1;
@@ -13,17 +13,24 @@ const Body = styled.View`
     align-items:center;
 `;
 
-const Logo = styled.View`
-    background-color:#E63586;
-    width:70%;
-    height:40%;
-
-`;
-
 const Texts = styled.Text`
     color:#fffffe;
     text-align:center;
     font-size:${4*Dimensions.get('screen').height/100};
+`;
+const ScoreTexts = styled.Text`
+    /* color:#fffffe; */
+    text-align:center;
+    font-size:${8*Dimensions.get('screen').height/100};
+`;
+
+const Logo = styled.View`
+    width:100%;
+    height:40%;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
 `;
 
 const Menu = styled.View`
@@ -39,16 +46,13 @@ class Container extends React.Component {
     render() {
         return (
         <Body>
-            <Logo></Logo>
+            <Logo><ScoreTexts>score : {Math.floor(this.props.score)}</ScoreTexts></Logo>
             <Menu>
                 <Button onPress={() => this.props.setGame()}>
-                    <Texts>start</Texts>
+                    <Texts>restart</Texts>
                 </Button>
-                <Button onPress={() => this.props.selectGame(1)}>
-                    <Texts>game1</Texts>
-                </Button>
-                <Button onPress={() => this.props.selectGame(2)}>
-                    <Texts>game2</Texts>
+                <Button onPress={() => this.props.backHome()}>
+                    <Texts>back</Texts>
                 </Button>
             </Menu>
         </Body>
@@ -57,6 +61,6 @@ class Container extends React.Component {
 }
 
 export default connect(
-    state => ({  }),
-    { setGame,selectGame }
+    state => ({ score:state.gameStates.score }),
+    { setGame,backHome }
 )(Container);

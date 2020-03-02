@@ -18,8 +18,8 @@ const Style = styled.View`
 
 const Card = styled.TouchableOpacity`
     position: relative;
-    width: ${15*Dimensions.get('screen').width/100};
-    height: ${22.5*Dimensions.get('screen').width/100};
+    width: ${props => (props.width*Dimensions.get('screen').width/100)};
+    height: ${props => (props.height*Dimensions.get('screen').width/100)};
     background-color:#29b6ec;
     border-radius:${2*Dimensions.get('screen').width/100};
 `;
@@ -39,7 +39,7 @@ class Container extends React.Component {
     render() {
         return (
         <Style>
-            <Card onPress={()=>this.click()}>
+            <Card onPress={()=>this.click()} width={this.props.width} height={this.props.height}>
                 {/* <CardText> */}
                     <Texts>{this.props.card}</Texts>
                 {/* </CardText> */}

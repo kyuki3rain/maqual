@@ -24,7 +24,11 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "jp.youardomain.myapp"
+    },
+    "android": {
+      "package": "jp.yourdomain.myapp"
     }
   }
 }
