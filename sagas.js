@@ -10,7 +10,7 @@ function* setGame(){
 }
 
 function* switchGame(){
-    gameNum = yield select(state => state.selectGame);
+    const gameNum = yield select(state => state.selectGame);
     switch (gameNum){
         case 1:yield setGame01();
         case 2:yield setGame02();

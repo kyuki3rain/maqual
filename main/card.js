@@ -20,29 +20,28 @@ const Card = styled.TouchableOpacity`
     position: relative;
     width: ${props => (props.width*Dimensions.get('screen').width/100)};
     height: ${props => (props.height*Dimensions.get('screen').width/100)};
-    background-color:#29b6ec;
+    background-color:${props =>((props.color)?"#29b6ec":"gray")};
     border-radius:${2*Dimensions.get('screen').width/100};
 `;
 
 const Texts = styled.Text`
     color:#fffffe;
     text-align:center;
-    font-size:${5*Dimensions.get('screen').height/100};
-    line-height:${22.5*Dimensions.get('screen').width/100};
+    font-size:${props => (props.height/4.5*Dimensions.get('screen').height/100)};
+    line-height:${props => (props.height*Dimensions.get('screen').width/100)};
 `;
 
 class Container extends React.Component {
     click(){
-        this.props.selectCard(this.props.card)
-        // console.log("0k");
+        if(this.props.cardFlag[this.props.cardNum]){
+            this.props.selectCard(this.props.cardNum);
+        }
     }
     render() {
         return (
         <Style>
-            <Card onPress={()=>this.click()} width={this.props.width} height={this.props.height}>
-                {/* <CardText> */}
-                    <Texts>{this.props.card}</Texts>
-                {/* </CardText> */}
+            <Card onPress={()=>this.click()} width={this.props.width} height={this.props.height} color={this.props.cardFlag[this.props.cardNum]}>
+                <Texts height={this.props.height}>{this.props.card[this.props.cardNum]}</Texts>
             </Card>
         </Style>
         );
@@ -50,6 +49,6 @@ class Container extends React.Component {
 }
 
 export default connect(
-    state => ({ order:state.order,answer:state.answer,question:state.question,questionArray:state.questionArray }),
+    state => ({ card:state.gameStates.card,cardFlag:state.gameStates.cardFlag.slice() }),
     { selectCard }
 )(Container);

@@ -6,7 +6,7 @@ export const ActionType ={
     TIME_COUNT_DOWN : "timeCountDown",
     SET_TIME : "setTime",
     SELECT_GAME : "selectGame",
-    
+    TURN_FLAG : "turnFlag",
 
     SET_ANSWER: "setAnswer",
     SET_FORMULA : "setFormula",
@@ -19,7 +19,8 @@ export const ActionType ={
     REF_ANSWER : "refAnswer",
     START_TIME : "startTime",
     PUSH_SCORE : "pushScore",
-
+    
+    ADD_SCORE : "addScore",
     ADD_VALUE : "addValue",
 };
 
@@ -37,6 +38,7 @@ export const CounterAction = {
 
 export const addValue = amount => ({type:ActionType.ADD_VALUE, payload:amount});
 export const setGame = () => ({type:ActionType.SET_GAME})
+export const turnFlag = (cardFlag) => ({type:ActionType.TURN_FLAG,payload:cardFlag})
 export const selectCard = (value) => ({type:ActionType.SELECT_CARD,payload:value});
 export const finishGame = () => ({type:ActionType.FINISH_GAME})
 export const timeCountDown = () => ({type:ActionType.TIME_COUNT_DOWN});

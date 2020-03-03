@@ -33,31 +33,27 @@ const CardRow = styled.View`
 `;
 
 class Container extends React.Component {
-    setCard(row,column,width,height){
-        let cardList = [];
-        for(let i=0;i<row;i++){
-            let card = [];
-            for(let j=0;j<column;j++){
-                card.push(<Card card={this.props.card[j+i*column]} width={width} height={height} key={i*column+j}></Card>);
-            }
-            cardList.push(<CardRow key={i}>{card}</CardRow>);
-        }
-        return cardList;
+    setCard(column,width,height,k){
+        let array = Array.apply(null,new Array(column)).map(function(v,i){ return k + i;});
+        return (
+            <CardRow>
+                {array.map((j)=>{
+                    return <Card cardNum={j} width={width} height={height} key={j}></Card>;
+                })}
+            </CardRow>
+        );
     }
     
     cardArea(){
         
         switch(this.props.game){
             case 1:{
-                return (<Style><Body>{this.setCard(2,5,15,22.5)}</Body></Style>);
+                return (<Style><Body>{this.setCard(5,15,22.5,0)}{this.setCard(5,15,22.5,5)}</Body></Style>);
             }
             case 2:{
                 return (
                 <Style>
-                    <Body>{this.setCard(2,5,15,22.5)}</Body>
-                    {/* <CardRow>
-                        <Card card={this.props.card[8]} width={15} height={50}></Card>
-                    </CardRow> */}
+                    <Body>{this.setCard(5,14,21,0)}{this.setCard(5,14,21,5)}{this.setCard(2,40,12,10)}</Body>
                 </Style>
                 );
             }
@@ -70,6 +66,6 @@ class Container extends React.Component {
 }
 
 export default connect(
-    state => ({ card:state.gameStates.card,game:state.game,timeLimit:state.timeLimit,time:state.gameStates.time }),
+    state => ({ card:state.gameStates.card,game:state.game,timeLimit:state.timeLimit,time:state.gameStates.time,cardFlag:state.gameStates.cardFlag }),
     { setTime,timeCountDown }
 )(Container);

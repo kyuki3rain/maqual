@@ -45,6 +45,7 @@ function* setAnswer(){
 function* setCard(){
     let card = ["0","1","2","3","4","5","6","7","8","9","+","-","Ã—","Ã·","="];
     yield put({type:ActionType.SET_CARD,payload:card});
+    yield put({type:ActionType.TURN_FLAG,payload:new Array(card.length).fill(true)});
 }
 
 function* setFormula(){
@@ -66,6 +67,7 @@ function* judge(){
         const questionArray = yield select(state => state.gameStates.questionArray);
         if(answer[questionArray[order]]==value){
             if(questionArray.length===order+1){
+                yield put({type:ActionType.PUSH_SCORE});
                 yield setAnswer();
                 break;
             }

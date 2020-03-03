@@ -72,6 +72,6 @@ class Container extends React.Component {
 }
 
 export default connect(
-    state => ({ score:state.gameStates.stage }),
+    state => ({ score:state.gameStates.score }),
     { setGame,backHome }
 )(Container);

@@ -15,8 +15,8 @@ function* setAnswer(){
     let b;
     let d,ans;
     do{
-        a = Math.floor(Math.random() * 9)+1;
-        b = Math.floor(Math.random() * 9)+1;
+        a = Math.floor(Math.random() * 99)+1;
+        b = Math.floor(Math.random() * 99)+1;
         switch(Math.floor(Math.random() * 4)){
             case 0: d="+";ans=a+b;break;
             case 1: d="-";ans=a-b;break;
@@ -26,7 +26,6 @@ function* setAnswer(){
     }while(ans<0||ans>100);
     let answer = a.toString() + d + b.toString() + "=" + ans.toString();
     yield put({type:ActionType.SET_ANSWER,answer,question:"",questionArray:[]});
-    yield put({type:ActionType.START_TIME,payload:new Date()});
     yield setCard();
     yield setFormula();
 }
@@ -36,16 +35,18 @@ function* setCard(){
     // console.log(card);
     card = card.split("");
     let d;
-    if(card.length<7){
-        switch(Math.floor(Math.random() * 4)){
-            case 0: d="+";break;
-            case 1: d="-";break;
-            case 2: d="×";break;
-            case 3: d="÷";break;
+    if(card.length<10){
+        for(let i=0;i<2;i++){
+            switch(Math.floor(Math.random() * 4)){
+                case 0: d="+";break;
+                case 1: d="-";break;
+                case 2: d="×";break;
+                case 3: d="÷";break;
+            }
+            card.push(d);
         }
-        card.push(d);
     }
-    for(let i=card.length;i<8;i++){
+    for(let i=card.length;i<10;i++){
         card.push((Math.floor(Math.random()*9)+1).toString());
     }
     for(let i = card.length - 1; i > 0; i--){
@@ -54,10 +55,11 @@ function* setCard(){
         card[i] = card[r];
         card[r] = tmp;
     }
-    card.splice(4,0,"←");
-    card.push("→");
+    card.push("reset");
+    card.push("enter");
     // console.log(card);
     yield put({type:ActionType.SET_CARD,payload:card});
+    yield put({type:ActionType.TURN_FLAG,payload:new Array(card.length).fill(true)});
 }
 
 function* setFormula(){
@@ -72,26 +74,34 @@ function* judge(){
     do{
         const action = yield take(ActionType.SELECT_CARD);
         let question = yield select(state => state.gameStates.question);
-        const value = action.payload;
-        if(value==="→"){
-            question=question.replace("=","===");
-            question=question.replace("×","*");
-            question=question.replace("÷","/");
-            question = "return ("+question+")";
-            let f = new Function(question)();
+        const card = yield select(state => state.gameStates.card);
+        const cardNum = action.payload;
+        if(card[cardNum]==="enter"){
+            let f=true;
+            try{
+                f = new Function("return ("+question.replace("=","===").replace("×","*").replace("÷","/")+")")();
+            }
+            catch{
+                f=false;
+            }
             // console.log(f);
-            if(f){
+            if(f===true){
+                yield put({type:ActionType.ADD_SCORE,payload:question.length});
                 yield setAnswer();
                 break;
             }
         }
-        else if(value==="←"){
-            yield put({type:ActionType.ADD_VALUE,payload:question.substring(0,question.length-1)});
+        else if(card[cardNum]==="reset"){
+            yield put({type:ActionType.ADD_VALUE,payload:""});
+            yield put({type:ActionType.TURN_FLAG,payload:new Array(card.length).fill(true)})
             yield put({type:ActionType.DEL_ORDER});
             yield setFormula();
         }
         else{
-            yield put({type:ActionType.ADD_VALUE,payload:question + value});
+            let cardFlag = yield select(state => state.gameStates.cardFlag);
+            cardFlag[cardNum] = false;
+            yield put({type:ActionType.TURN_FLAG,payload:cardFlag})
+            yield put({type:ActionType.ADD_VALUE,payload:question + card[cardNum]});
             yield put({type:ActionType.ADD_ORDER});
             yield setFormula();
         }
