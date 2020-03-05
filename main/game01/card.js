@@ -3,7 +3,7 @@ import styled from 'styled-components/native';
 import { connect } from 'react-redux';
 import { Text, View,Dimensions } from 'react-native';
 
-import { selectCard } from "../actions";
+import { selectCard } from "../../actions";
 
 const Style = styled.View`
     flex:1;
@@ -20,7 +20,7 @@ const Card = styled.TouchableOpacity`
     position: relative;
     width: ${props => (props.width*Dimensions.get('screen').width/100)};
     height: ${props => (props.height*Dimensions.get('screen').width/100)};
-    background-color:${props =>((props.color)?"#29b6ec":"gray")};
+    background-color:${props =>((props.color)?"#21bbb8":"gray")};
     border-radius:${2*Dimensions.get('screen').width/100};
 `;
 

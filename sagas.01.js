@@ -81,16 +81,15 @@ function* judge(){
     }while(true);
 }
 
-function* cancelGame(task){
-    yield take(ActionType.SET_GAME);
-    yield cancel(task);
-}
-
 export default function* setGame(){
-    yield put({type:CounterAction.START_COUNTER,payload:{secs:10}});
+    yield put({type:CounterAction.START_COUNTER,payload:{secs:9}});
     const task = yield fork(setAnswer);
     const { type } = yield take([ActionType.FINISH_GAME,ActionType.SET_GAME]);
     if(type === ActionType.SET_GAME){
         yield cancel(task);
+    }
+    else{
+        const navigate = yield select(state => state.navigate);
+        yield navigate("Finish");
     }
 }

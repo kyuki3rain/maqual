@@ -22,6 +22,8 @@ export const ActionType ={
     
     ADD_SCORE : "addScore",
     ADD_VALUE : "addValue",
+
+    NAVIGATE : "navigation",
 };
 
 export const CounterAction = {
@@ -45,6 +47,8 @@ export const timeCountDown = () => ({type:ActionType.TIME_COUNT_DOWN});
 export const backHome = () => ({type:ActionType.MAKE_HOME});
 export const setTime = () => ({type:ActionType.SET_TIME});
 export const selectGame = (gameNum) => ({type:ActionType.SELECT_GAME,payload:gameNum})
+
+export const navigate = (navigate) => ({type:ActionType.NAVIGATE,payload:navigate});
 
 // export const setAnswer = (answer,question,questionArray) => ({type:ActionType.SET_ANSWER,answer,question,questionArray});
 // export const setFormula = (res,order) => ({type:ActionType.SET_FORMULA,payload:res,order});

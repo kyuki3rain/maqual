@@ -5,7 +5,7 @@ import { Text, View,Dimensions } from 'react-native';
 
 const Style = styled.View`
     height:${10*Dimensions.get('screen').height/100};
-    background-color:#21bbb8;
+    background-color:#29b6ec;
 `;
 
 

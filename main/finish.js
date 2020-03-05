@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components/native';
 import { connect } from 'react-redux';
-import {setGame,backHome} from "../actions";
+import {setGame,backHome,navigate } from "../actions";
 import { Text, View,Dimensions } from 'react-native';
 import {Button} from "./common-styles";
 
@@ -54,15 +54,25 @@ const Menu = styled.View`
 `;
 
 class Container extends React.Component {
+    click(){
+        console.log(this.props.game);
+        this.props.navigation.navigate(`Game${this.props.game}`);
+        this.props.setGame();
+        this.props.navigate(this.props.navigation.navigate);
+    }
+    back(){
+        this.props.navigation.navigate("Home");
+        this.props.backHome();
+    }
     render() {
         return (
         <Body>
             <Logo><ScoreTexts>score : {Math.floor(this.props.score)}</ScoreTexts></Logo>
             <Menu>
-                <Button onPress={() => this.props.setGame()}>
+                <Button onPress={() => this.click()}>
                     <Texts>restart</Texts>
                 </Button>
-                <Button onPress={() => this.props.backHome()}>
+                <Button onPress={() => this.back()}>
                     <Texts>back</Texts>
                 </Button>
             </Menu>
@@ -72,6 +82,6 @@ class Container extends React.Component {
 }
 
 export default connect(
-    state => ({ score:state.gameStates.score }),
-    { setGame,backHome }
+    state => ({ score:state.gameStates.score,game:state.selectGame }),
+    { setGame,backHome,navigate }
 )(Container);

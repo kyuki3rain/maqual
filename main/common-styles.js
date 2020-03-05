@@ -4,7 +4,7 @@ import { Text, View , Dimensions, TouchableOpacity } from 'react-native';
 
 
 export const Button = styled.TouchableOpacity`
-    background-color:#29b6ec;
+    background-color:#21bbb8;
     border-radius:${Dimensions.get('screen').height/100};
     width:${30*Dimensions.get('screen').height/100};
     height:${6*Dimensions.get('screen').height/100};

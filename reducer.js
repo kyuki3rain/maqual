@@ -21,6 +21,7 @@ const initialStates = {
     game:0,
     secs: 10,
     paused: true,
+    navigate:null,
 };
 
 export default (state = initialStates, action) => {
@@ -52,6 +53,8 @@ export default (state = initialStates, action) => {
         case CounterAction.COUNTER_STARTED:return {...state,paused: false};
         case CounterAction.COUNTER_PAUSED:return {...state,paused: true};
         case CounterAction.COUNT_OVER:return {...state,paused: true,secs: initialStates.secs};
+
+        case ActionType.NAVIGATE : return {...state,navigate:action.payload};
 
         default:return state;
     }

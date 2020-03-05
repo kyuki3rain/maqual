@@ -3,6 +3,7 @@ import {ActionType,CounterAction} from "./actions"
 import React from 'react';
 import styled from 'styled-components/native';
 import { Text, View,Dimensions } from 'react-native';
+import { NavigationActions } from 'react-navigation';
 
 const Texts = styled.Text`
     margin-top:100;
@@ -86,7 +87,10 @@ function* judge(){
             }
             // console.log(f);
             if(f===true){
-                yield put({type:ActionType.ADD_SCORE,payload:question.length});
+                const secs = yield select(state => state.secs);
+                yield put({type:CounterAction.PAUSE_COUNTER});
+                yield put({type:ActionType.ADD_SCORE,payload:question.length-4});
+                yield put({type:CounterAction.START_COUNTER,payload:{secs:secs+question.length}});
                 yield setAnswer();
                 break;
             }
@@ -109,10 +113,14 @@ function* judge(){
 }
 
 export default function* setGame(){
-    yield put({type:CounterAction.START_COUNTER,payload:{secs:30}});
+    yield put({type:CounterAction.START_COUNTER,payload:{secs:59}});
     const task = yield fork(setAnswer);
     const { type } = yield take([ActionType.FINISH_GAME,ActionType.SET_GAME]);
     if(type === ActionType.SET_GAME){
         yield cancel(task);
+    }
+    else{
+        const navigate = yield select(state => state.navigate);
+        yield navigate("Finish");
     }
 }

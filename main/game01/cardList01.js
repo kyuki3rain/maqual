@@ -3,7 +3,7 @@ import styled from 'styled-components/native';
 import { connect } from 'react-redux';
 import { Text, View,Dimensions } from 'react-native';
 
-import { setTime,timeCountDown } from "../actions";
+import { setTime,timeCountDown } from "../../actions";
 
 import Card from "./card";
 
@@ -43,25 +43,14 @@ class Container extends React.Component {
             </CardRow>
         );
     }
-    
-    cardArea(){
-        
-        switch(this.props.game){
-            case 1:{
-                return (<Style><Body>{this.setCard(5,15,22.5,0)}{this.setCard(5,15,22.5,5)}</Body></Style>);
-            }
-            case 2:{
-                return (
-                <Style>
-                    <Body>{this.setCard(5,14,21,0)}{this.setCard(5,14,21,5)}{this.setCard(2,40,12,10)}</Body>
-                </Style>
-                );
-            }
-            default: return null;
-        }
-    }
     render() {
-        return this.cardArea();
+        return (
+            <Style>
+                <Body>
+                    {this.setCard(5,15,22.5,0)}{this.setCard(5,15,22.5,5)}
+                </Body>
+            </Style>
+        );
     }
 }
 
