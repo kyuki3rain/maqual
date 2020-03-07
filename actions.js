@@ -7,7 +7,8 @@ export const ActionType ={
     SET_TIME : "setTime",
     SELECT_GAME : "selectGame",
     TURN_FLAG : "turnFlag",
-
+    PAUSE_GAME : "pauseGame",
+    
     SET_ANSWER: "setAnswer",
     SET_FORMULA : "setFormula",
     SET_CARD : "setCard",
@@ -46,7 +47,12 @@ export const finishGame = () => ({type:ActionType.FINISH_GAME})
 export const timeCountDown = () => ({type:ActionType.TIME_COUNT_DOWN});
 export const backHome = () => ({type:ActionType.MAKE_HOME});
 export const setTime = () => ({type:ActionType.SET_TIME});
-export const selectGame = (gameNum) => ({type:ActionType.SELECT_GAME,payload:gameNum})
+
+export const selectGame = (game,lev) => ({type:ActionType.SELECT_GAME,payload:{game,lev}});
+
+export const pause = () => ({type:CounterAction.PAUSE_COUNTER});
+export const start = (secs) => ({type:CounterAction.START_COUNTER,payload:{secs}})
+export const pauseGame = () => ({type:ActionType.PAUSE_GAME});
 
 export const navigate = (navigate) => ({type:ActionType.NAVIGATE,payload:navigate});
 

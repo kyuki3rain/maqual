@@ -2,8 +2,9 @@ import React from 'react';
 import styled from 'styled-components/native';
 import { connect } from 'react-redux';
 import {setGame,backHome,navigate } from "../actions";
-import { Text, View,Dimensions } from 'react-native';
+import { Text, View,Dimensions,TouchableHighlight } from 'react-native';
 import {Button} from "./common-styles";
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 const Body = styled.View`
     flex:1;
@@ -55,14 +56,21 @@ const Menu = styled.View`
 
 class Container extends React.Component {
     click(){
-        console.log(this.props.game);
         this.props.navigation.navigate(`Game${this.props.game}`);
         this.props.setGame();
-        this.props.navigate(this.props.navigation.navigate);
     }
     back(){
-        this.props.navigation.navigate("Home");
+        this.props.navigation.navigate("Select");
         this.props.backHome();
+    }
+    static navigationOptions =({navigation}) => {
+        return {
+            headerLeft: () => (
+                <TouchableHighlight onPress={() => navigation.navigate("Select")} style={{marginLeft:10}}>
+                    <Icon name="arrow-back" size={30}></Icon>
+                </TouchableHighlight>
+            ),
+        }
     }
     render() {
         return (

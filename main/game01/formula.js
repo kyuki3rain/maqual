@@ -14,13 +14,15 @@ const Style = styled.View`
 
 const TimeView = styled.View`
     position:absolute;
-    right:${7.5*Dimensions.get('screen').width/100};;
-    bottom:${-5*Dimensions.get('screen').height/100};
+    right:${7.5*Dimensions.get('screen').width/100};
+    /* bottom:${-5*Dimensions.get('screen').height/100}; */
+    top:${2*Dimensions.get('screen').height/100};
 `;
 const ScoreView = styled.View`
     position:absolute;
     left:${7.5*Dimensions.get('screen').width/100};
-    bottom:${-5*Dimensions.get('screen').height/100};
+    /* bottom:${-5*Dimensions.get('screen').height/100}; */
+    top:${2*Dimensions.get('screen').height/100};
 `;
 
 const Text = styled.Text`

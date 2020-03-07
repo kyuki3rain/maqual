@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import {setGame,selectGame,navigate } from "../actions";
 import { Dimensions } from 'react-native';
 import { Button } from "./common-styles";
+import Blink from "./blink";
 
 const Body = styled.View`
     flex:1;
@@ -13,49 +14,50 @@ const Body = styled.View`
     align-items:center;
 `;
 
-const Logo = styled.View`
-    background-color:#E63586;
-    width:70%;
-    height:40%;
-
+const Logo = styled.Image`
+    /* background-color:#E63586; */
+    margin-top:${5*Dimensions.get('screen').height/100};
+    width:80%;
+    height:30%;
 `;
 
 const Texts = styled.Text`
-    color:#fffffe;
+    color:#000000;
     text-align:center;
     font-size:${4*Dimensions.get('screen').height/100};
 `;
 
 const Menu = styled.View`
     width:100%;
-    height:50%;
+    height:40%;
     display: flex;
     flex-direction:column;
     justify-content:center;
     align-items:center;
 `;
 
+const Buttons = styled.TouchableOpacity`
+    border-radius:${Dimensions.get('screen').height/100};
+    width:100%;
+    height:100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin:${2*Dimensions.get('screen').height/100}px;
+`;
+
 class Container extends React.Component {
-    click(num){
-        this.props.selectGame(num);
-        this.props.navigation.navigate(`Game${num}`);
-        this.props.setGame();
-        this.props.navigate(this.props.navigation.navigate);
-    }
     render() {
         return (
         <Body>
-            <Logo></Logo>
+            <Logo source={require("../assets/logo2.png")} resizeMode="contain"></Logo>
             <Menu>
                 {/* <Button onPress={() => this.props.setGame()}>
                     <Texts>start</Texts>
                 </Button> */}
-                <Button onPress={() => this.click(1)}>
-                    <Texts>game1</Texts>
-                </Button>
-                <Button onPress={() => this.click(2)}>
-                    <Texts>game2</Texts>
-                </Button>
+                <Buttons onPress={() => this.props.navigation.navigate("Select")}>
+                    <Blink text={"Tap To Start"} duration={1000}></Blink>
+                </Buttons>
             </Menu>
         </Body>
         );
@@ -64,5 +66,5 @@ class Container extends React.Component {
 
 export default connect(
     state => ({  }),
-    { setGame,selectGame,navigate }
+    { setGame }
 )(Container);

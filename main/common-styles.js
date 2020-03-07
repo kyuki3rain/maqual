@@ -13,3 +13,9 @@ export const Button = styled.TouchableOpacity`
     align-items: center;
     margin:${2*Dimensions.get('screen').height/100}px;
 `;
+
+export const Texts = styled.Text`
+    color:#fffffe;
+    text-align:center;
+    font-size:${4*Dimensions.get('screen').height/100};
+`;

@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "maqual",
-    "slug": "maqual",
+    "name": "maquation",
+    "slug": "maquation",
     "privacy": "public",
     "sdkVersion": "36.0.0",
     "platforms": [
@@ -9,9 +9,9 @@
       "android",
       "web"
     ],
-    "version": "1.0.0",
+    "version": "1.0.6",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/icon2.png",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -25,10 +25,10 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "jp.kyuki3rain.maqual"
+      "bundleIdentifier": "jp.kyuki3rain.maquation"
     },
     "android": {
-      "package": "jp.kyuki3rain.maqual"
+      "package": "jp.kyuki3rain.maquation"
     }
   }
 }

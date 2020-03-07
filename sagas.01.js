@@ -7,37 +7,41 @@ import { Text, View,Dimensions } from 'react-native';
 const Texts = styled.Text`
     margin-top:100;
     text-align:center;
-    font-size:${10*Dimensions.get('screen').height/100};
+    font-size:${props => props.fontSize*Dimensions.get('screen').height/100};
 `;
 
 function* setAnswer(){
     let a;
     let b;
     let d,ans;
+    let lev = yield select(state => state.level);
+    let p= Math.floor(Math.random() * 3);
+    if(lev===0){
+        lev=1;p=2;
+    }
     do{
-        a = Math.floor(Math.random() * 9)+1;
-        b = Math.floor(Math.random() * 9)+1;
+        a = Math.floor(Math.random() * (10**lev-1))+1;
+        b = Math.floor(Math.random() * (10**lev-1))+1;
         switch(Math.floor(Math.random() * 4)){
             case 0: d="+";ans=a+b;break;
-            case 1: d="-";ans=a-b;break;
+            case 1: d="-";ans=a;a=ans+b;break;
             case 2: d="×";ans=a*b;break;
-            case 3: d="÷";ans=(Math.floor(a/b)==a/b)?Math.floor(a/b):-1;break;
+            case 3: d="÷";ans=a;a=ans*b;break;
         }
-    }while(ans<0||ans>100);
+    }while(ans<0||ans>(10**(lev*2))||a>(10**(lev+1)-1));
     let answer = a.toString() + d + b.toString() + "=" + ans.toString();
     let question;
-    switch(Math.floor(Math.random() * 3)){
-        case 0: question = "?".repeat(a.toString().length) + d + b.toString() + "=" + ans.toString();break;
-        case 1: question = a.toString() + d + "?".repeat(b.toString().length) + "=" + ans.toString();break;
-        case 2: question = a.toString() + d + b.toString() + "=" + "?".repeat(ans.toString().length);break;
-        case 3: question = a.toString() + "?".repeat(d.length) + b.toString() + "=" + ans.toString();break;
+    switch(p){
+        case 0: question = "_".repeat(a.toString().length) + d + b.toString() + "=" + ans.toString();break;
+        case 1: question = a.toString() + d + "_".repeat(b.toString().length) + "=" + ans.toString();break;
+        case 2: question = a.toString() + d + b.toString() + "=" + "_".repeat(ans.toString().length);break;
+        case 3: question = a.toString() + "_".repeat(d.length) + b.toString() + "=" + ans.toString();break;
     }
     let questionArray = [];
     for(let i=0;i<question.length;i++){
-        if(question[i]=="?")questionArray.push(i);
+        if(question[i]=="_")questionArray.push(i);
     }
     yield put({type:ActionType.SET_ANSWER,answer,question,questionArray});
-    yield put({type:ActionType.START_TIME,payload:new Date()});
     yield setCard();
     yield setFormula();
 }
@@ -53,7 +57,7 @@ function* setFormula(){
     const answer = yield select(state => state.gameStates.answer);
     const question = yield select(state => state.gameStates.question);
     const questionArray = yield select(state => state.gameStates.questionArray);
-    const res = <Texts>{answer.slice(0,questionArray[order])}<Text>_</Text>{question.slice(questionArray[order]+1,question.length)}</Texts>;
+    const res = <Texts fontSize={(question.length<=8)?10:Math.floor(80/question.length)}>{answer.slice(0,questionArray[order])}<Text>_</Text>{question.slice(questionArray[order]+1,question.length)}</Texts>;
     yield put({type:ActionType.SET_FORMULA,payload:res,order});
     yield judge();
 }
@@ -65,9 +69,15 @@ function* judge(){
         let order = yield select(state => state.gameStates.order);
         const answer = yield select(state => state.gameStates.answer);
         const questionArray = yield select(state => state.gameStates.questionArray);
+        const secs = yield select(state => state.secs);
+
+        if(secs<0)yield put({type:ActionType.FINISH_GAME});
+        
         if(answer[questionArray[order]]==value){
             if(questionArray.length===order+1){
                 yield put({type:ActionType.PUSH_SCORE});
+                yield put({type:CounterAction.PAUSE_COUNTER});
+                yield put({type:CounterAction.START_COUNTER,payload:{secs:secs+1}});
                 yield setAnswer();
                 break;
             }
@@ -76,6 +86,10 @@ function* judge(){
                 yield setFormula();
                 break;
             }
+        }
+        else{
+            yield put({type:CounterAction.PAUSE_COUNTER});
+            yield put({type:CounterAction.START_COUNTER,payload:{secs:secs-1}});
         }
         // console.log("これがひとつならいーんだけどね")
     }while(true);

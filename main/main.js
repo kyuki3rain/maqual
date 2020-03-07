@@ -1,14 +1,14 @@
 import React from 'react';
 import styled from 'styled-components/native';
-import { Text, View,Dimensions } from 'react-native';
+import { Text, View,Dimensions,TouchableHighlight } from 'react-native';
 import { connect } from 'react-redux';
-import { setGame } from "../actions";
+import { setGame,pause } from "../actions";
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
-// import { createDrawerNavigator } from 'react-navigation-drawer';
+import { createDrawerNavigator } from 'react-navigation-drawer';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
-import Formula from "./game01/formula";
 import CardList from "./game01/cardList01";
 import Header from "./header";
 import Tab from "./tab";
@@ -16,9 +16,12 @@ import Home from "./home";
 import Finish from "./finish";
 import Game01 from "./game01/game";
 import Game02 from "./game02/game";
+import Select from "./select";
+
+import ModalScreen from "./modal";
 
 
-const Style = styled.View`
+const Style = styled.SafeAreaView`
     display:flex;
     flex-direction:column;
     justify-content:center;
@@ -35,25 +38,40 @@ const RootStack = createStackNavigator(
         Home:{
             screen: Home,
             navigationOptions: {
-                header:() => <Header></Header>,
+                header:() => null,
+                
             },
         },
         Finish:{
             screen: Finish,
             navigationOptions: {
-                header:() => <Header></Header>,
+                headerStyle:{
+                    backgroundColor:"#29b6ec",
+                },
             },
         },
         Game1:{
             screen: Game01,
             navigationOptions: {
-                header:() => <Header></Header>,
+                headerStyle:{
+                    backgroundColor:"#29b6ec",
+                },
             },
         },
         Game2:{
             screen: Game02,
             navigationOptions: {
-                header:() => <Header></Header>,
+                headerStyle:{
+                    backgroundColor:"#29b6ec",
+                }
+            },
+        },
+        Select:{
+            screen: Select,
+            navigationOptions: {
+                headerStyle:{
+                    backgroundColor:"#29b6ec",
+                },
             },
         },
     },
@@ -65,34 +83,6 @@ const RootStack = createStackNavigator(
 const AppContainer = createAppContainer(RootStack);
 
 class Container extends React.Component {
-    componentWillUnmount(){
-
-    }
-    setBody(){
-        switch(this.props.game){
-            case 0: return(
-                <Home></Home>
-                // <Text>0</Text>
-                );
-                
-            case -1: return(
-                    // <Text>2</Text>
-                    <Finish></Finish>
-                );
-
-            case 1:return(
-                <Game01></Game01>
-            )
-                    
-            case 2:return(
-                <Game02></Game02>
-            )
-                    
-            default: return(
-                <Text>Error</Text>
-            );  
-        }
-    }
     render() {
         return (
         <Style>
@@ -105,6 +95,6 @@ class Container extends React.Component {
 }
 
 export default connect(
-    state => ({game:state.game, }),
-    { setGame }
+    state => ({game:state.game,secs:state.secs }),
+    { setGame,pause }
 )(Container);

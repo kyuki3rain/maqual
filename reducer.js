@@ -18,8 +18,9 @@ const initialStates = {
         cardFlag:new Array(10).fill(true),
     },
     selectGame:1,
+    level:1,
     game:0,
-    secs: 10,
+    secs: 0,
     paused: true,
     navigate:null,
 };
@@ -32,7 +33,7 @@ export default (state = initialStates, action) => {
         case ActionType.MAKE_HOME: return {...state,gameStates:{...state.gameStates},game:0};
         case ActionType.TIME_COUNT_DOWN: return {...state,gameStates:{...state.gameStates,time:state.gameStates.time-1}};
         case ActionType.SET_TIME: return {...state,gameStates:{...state.gameStates,time:state.timeLimit}};
-        case ActionType.SELECT_GAME: return {...state,selectGame:action.payload};
+        case ActionType.SELECT_GAME: return {...state,selectGame:action.payload.game,level:action.payload.lev};
         case ActionType.TURN_FLAG: return {...state,gameStates:{...state.gameStates,cardFlag:action.payload}};
 
         case ActionType.SET_ANSWER: return {...state,gameStates:{...state.gameStates,stage:state.gameStates.stage+1,answer:action.answer,question:action.question,order:0,questionArray:action.questionArray}};

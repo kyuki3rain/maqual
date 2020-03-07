@@ -1,4 +1,4 @@
-import {call,put,fork,select,take} from "redux-saga/effects"
+import {call,put,fork,select,take,cancel} from "redux-saga/effects"
 import {ActionType,CounterAction} from "./actions"
 import React from 'react';
 import styled from 'styled-components/native';
@@ -15,17 +15,18 @@ function* setAnswer(){
     let a;
     let b;
     let d,ans;
+    let answer;
     do{
         a = Math.floor(Math.random() * 99)+1;
         b = Math.floor(Math.random() * 99)+1;
         switch(Math.floor(Math.random() * 4)){
             case 0: d="+";ans=a+b;break;
-            case 1: d="-";ans=a-b;break;
+            case 1: d="-";ans=a;a=ans+b;break;
             case 2: d="×";ans=a*b;break;
-            case 3: d="÷";ans=(Math.floor(a/b)==a/b)?Math.floor(a/b):-1;break;
+            case 3: d="÷";ans=a;a=ans*b;break;
         }
-    }while(ans<0||ans>100);
-    let answer = a.toString() + d + b.toString() + "=" + ans.toString();
+        answer = a.toString() + d + b.toString() + "=" + ans.toString();
+    }while(answer.length>9);
     yield put({type:ActionType.SET_ANSWER,answer,question:"",questionArray:[]});
     yield setCard();
     yield setFormula();
@@ -33,11 +34,10 @@ function* setAnswer(){
 
 function* setCard(){
     let card = yield select(state => state.gameStates.answer);
-    // console.log(card);
     card = card.split("");
     let d;
-    if(card.length<10){
-        for(let i=0;i<2;i++){
+    if(card.length<=9){
+        for(let i=0;i<1;i++){
             switch(Math.floor(Math.random() * 4)){
                 case 0: d="+";break;
                 case 1: d="-";break;
@@ -115,8 +115,8 @@ function* judge(){
 export default function* setGame(){
     yield put({type:CounterAction.START_COUNTER,payload:{secs:59}});
     const task = yield fork(setAnswer);
-    const { type } = yield take([ActionType.FINISH_GAME,ActionType.SET_GAME]);
-    if(type === ActionType.SET_GAME){
+    const { type } = yield take([ActionType.FINISH_GAME,ActionType.PAUSE_GAME]);
+    if(type === ActionType.PAUSE_GAME){
         yield cancel(task);
     }
     else{
