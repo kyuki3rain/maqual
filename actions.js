@@ -25,6 +25,11 @@ export const ActionType ={
     ADD_VALUE : "addValue",
 
     NAVIGATE : "navigation",
+    ADD_ADCOUNT : "adAdCount",
+    RESET_ADCOUNT : "resetAdCount",
+
+    PUSH_WORLD_SCORE : "worldScore",
+    PUSH_MYBEST_SCORE : "mybestScore",
 };
 
 export const CounterAction = {
@@ -55,6 +60,9 @@ export const start = (secs) => ({type:CounterAction.START_COUNTER,payload:{secs}
 export const pauseGame = () => ({type:ActionType.PAUSE_GAME});
 
 export const navigate = (navigate) => ({type:ActionType.NAVIGATE,payload:navigate});
+
+export const addAdCount = () => ({type:ActionType.ADD_ADCOUNT});
+export const resetAdCount = () => ({type:ActionType.RESET_ADCOUNT});
 
 // export const setAnswer = (answer,question,questionArray) => ({type:ActionType.SET_ANSWER,answer,question,questionArray});
 // export const setFormula = (res,order) => ({type:ActionType.SET_FORMULA,payload:res,order});

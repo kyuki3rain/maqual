@@ -16,6 +16,8 @@ const initialStates = {
         time:0,
         score:0,
         cardFlag:new Array(10).fill(true),
+        worldScore:"--",
+        mybestScore:"--",
     },
     selectGame:1,
     level:1,
@@ -23,6 +25,7 @@ const initialStates = {
     secs: 0,
     paused: true,
     navigate:null,
+    adCount:0,
 };
 
 export default (state = initialStates, action) => {
@@ -48,6 +51,8 @@ export default (state = initialStates, action) => {
         
         case ActionType.ADD_SCORE: return {...state,gameStates:{...state.gameStates,score:state.gameStates.score + action.payload}};
         case ActionType.ADD_VALUE: return {...state,gameStates:{...state.gameStates,question:action.payload}}
+        case ActionType.ADD_ADCOUNT: return {...state,adCount:state.adCount+1};
+        case ActionType.RESET_ADCOUNT: return {...state,adCount:0};
 
         case CounterAction.START_COUNTER:return {...state,secs: action.payload.secs};
         case CounterAction.UPDATE_COUNTER:return {...state, secs: action.payload};
@@ -56,6 +61,10 @@ export default (state = initialStates, action) => {
         case CounterAction.COUNT_OVER:return {...state,paused: true,secs: initialStates.secs};
 
         case ActionType.NAVIGATE : return {...state,navigate:action.payload};
+        case ActionType.PAUSE_GAME : return {...state,game:0};
+
+        case ActionType.PUSH_WORLD_SCORE: return {...state,gameStates:{...state.gameStates,worldScore:action.payload}};
+        case ActionType.PUSH_MYBEST_SCORE: return {...state,gameStates:{...state.gameStates,mybestScore:action.payload}};
 
         default:return state;
     }

@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components/native';
 import { connect } from 'react-redux';
 import {setGame,backHome} from "../actions";
-import { Dimensions } from 'react-native';
+import { Dimensions,TouchableHighlight } from 'react-native';
 import {Button} from "./common-styles";
 
 const Body = styled.View`
@@ -14,14 +14,15 @@ const Body = styled.View`
 `;
 
 const Texts = styled.Text`
+    /* color:#fffffe; */
+    text-align:center;
+    margin-right:${5*Dimensions.get('screen').width/100};
+    font-size:${3*Dimensions.get('screen').height/100};
+`;
+const MenuTexts = styled.Text`
     color:#fffffe;
     text-align:center;
     font-size:${4*Dimensions.get('screen').height/100};
-`;
-const ScoreTexts = styled.Text`
-    /* color:#fffffe; */
-    text-align:center;
-    font-size:${8*Dimensions.get('screen').height/100};
 `;
 
 const Logo = styled.View`
@@ -43,16 +44,23 @@ const Menu = styled.View`
 `;
 
 class Container extends React.Component {
+    static navigationOptions =({navigation}) => {
+        return {
+            title:"Option",
+            headerRight: () => (
+                <TouchableHighlight onPress={() => navigation.navigate("PrivacyPolicy")} style={{marginLeft:20}}>
+                    <Texts>privacy policy</Texts>
+                </TouchableHighlight>
+            ),
+            gestureEnabled: false,
+        }
+    }
     render() {
         return (
         <Body>
-            <Logo><ScoreTexts>score : {Math.floor(this.props.score)}</ScoreTexts></Logo>
             <Menu>
-                <Button onPress={() => this.props.setGame()}>
-                    <Texts>restart</Texts>
-                </Button>
-                <Button onPress={() => this.props.backHome()}>
-                    <Texts>back</Texts>
+                <Button onPress={() => this.props.navigation.navigate("Select")}>
+                    <MenuTexts>back</MenuTexts>
                 </Button>
             </Menu>
         </Body>

@@ -20,14 +20,20 @@ const Black = styled.Text`
 class Container extends Component {
   constructor(props) {
     super(props);
-    this.state = { fadeAnim: new Animated.Value(1),isShowingText:true };
-    setInterval(()=>{
-      if(this.state.isShowingText)Animated.timing(this.state.fadeAnim, { toValue: 0, duration:props.duration }).start();
-      else Animated.timing(this.state.fadeAnim, { toValue: 1, duration:props.duration }).start();
+    this.state = { fadeAnim: new Animated.Value(1),isShowingText:true,f:null };
+  }
+  componentDidMount(){
+    let f = setInterval(()=>{
+      if(this.state.isShowingText)Animated.timing(this.state.fadeAnim, { toValue: 0, duration:this.props.duration }).start();
+      else Animated.timing(this.state.fadeAnim, { toValue: 1, duration:this.props.duration }).start();
       this.setState(previousState => {
         return { isShowingText: !previousState.isShowingText };
       });
-    },props.duration);
+    },this.props.duration);
+    this.setState({f:f});
+  }
+  componentWillUnmount(){
+    clearInterval(this.state.f);
   }
   render() {
     const animatedViewStyle = StyleSheet.flatten([

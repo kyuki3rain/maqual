@@ -9,7 +9,9 @@ import { createBottomTabNavigator } from 'react-navigation-tabs';
 import { createDrawerNavigator } from 'react-navigation-drawer';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-import CardList from "./game01/cardList01";
+import { AdMobBanner,PublisherBanner, AdMobInterstitial, AdMobRewarded } from "expo-ads-admob";
+
+import CardList from "./game01/cardList";
 import Header from "./header";
 import Tab from "./tab";
 import Home from "./home";
@@ -17,6 +19,8 @@ import Finish from "./finish";
 import Game01 from "./game01/game";
 import Game02 from "./game02/game";
 import Select from "./select";
+import Option from "./option";
+import PrivacyPolicy from "./privacy";
 
 import ModalScreen from "./modal";
 
@@ -74,6 +78,22 @@ const RootStack = createStackNavigator(
                 },
             },
         },
+        Option:{
+            screen: Option,
+            navigationOptions: {
+                headerStyle:{
+                    backgroundColor:"#29b6ec",
+                },
+            },
+        },
+        PrivacyPolicy:{
+            screen: PrivacyPolicy,
+            // navigationOptions: {
+            //     headerStyle:{
+            //         backgroundColor:"#29b6ec",
+            //     },
+            // },
+        },
     },
     {
         initialRouteName:"Home",
@@ -83,12 +103,27 @@ const RootStack = createStackNavigator(
 const AppContainer = createAppContainer(RootStack);
 
 class Container extends React.Component {
+    // componentDidMount() {
+    //     AdMobInterstitial.addEventListener('interstitialDidClose', () => {
+    //         this.props.navigation.navigate('Home')
+    //     })
+    // }
+    bannerError() {
+        console.log("An error");
+    }
     render() {
         return (
         <Style>
             {/* <Header></Header> */}
             {/* {this.setBody()} */}
             <AppContainer></AppContainer>
+                <AdMobBanner
+                // style={{position: "absolute",bottom: 0}}
+                bannerSize="smartBannerLandscape"
+                adUnitID="ca-app-pub-8493044522329514/8799919091"
+                // Test ID, Replace with your-admob-unit-id
+                didFailToReceiveAdWithError={this.bannerError}
+                />
         </Style>
         );
     }

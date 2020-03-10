@@ -1,10 +1,13 @@
 import React from 'react';
 import styled from 'styled-components/native';
 import { connect } from 'react-redux';
-import {setGame,selectGame,navigate,selectCard } from "../actions";
+import {setGame,selectGame,navigate,selectCard,addAdCount,resetAdCount } from "../actions";
 import { Dimensions,TouchableHighlight } from 'react-native';
 import { Button,Texts } from "./common-styles";
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import Icons from 'react-native-vector-icons/FontAwesome';
+
+import { AdMobBanner,PublisherBanner, AdMobInterstitial, AdMobRewarded } from "expo-ads-admob";
 
 const Style = styled.View`
     flex:1;
@@ -23,12 +26,27 @@ class Container extends React.Component {
     }
     static navigationOptions =({navigation}) => {
         return {
+            title:"Select Game",
             headerLeft: () => (
                 <TouchableHighlight onPress={() => navigation.navigate("Home")} style={{marginLeft:10}}>
-                    <Icon name="arrow-back" size={30}></Icon>
+                    <Icon name="arrow-back" size={36}></Icon>
+                </TouchableHighlight>
+            ),
+            headerRight: () => (
+                <TouchableHighlight onPress={() => navigation.navigate("Option")} style={{marginRight:10}}>
+                    <Icons name="gear" size={36}></Icons>
                 </TouchableHighlight>
             ),
         }
+    }
+    async showInterstitial() {
+        AdMobInterstitial.setAdUnitID('ca-app-pub-8493044522329514/6796572285') // Test ID, Replace with your-admob-unit-id
+        await AdMobInterstitial.requestAdAsync()
+        await AdMobInterstitial.showAdAsync()
+    }
+    count = 0;
+    returnSelect(){
+        this.props.navigation.navigate('Select');
     }
     render() {
         return (
@@ -42,9 +60,12 @@ class Container extends React.Component {
             <Button onPress={() => this.click(1,2)}>
                 <Texts>Level 3</Texts>
             </Button>
-            <Button onPress={() => this.click(2,2)}>
+            <Button onPress={() => this.click(2,3)}>
                 <Texts>Extra</Texts>
             </Button>
+            {/* <Button onPress={() => this.props.selectCard()}>
+                <Texts>debug</Texts>
+            </Button> */}
         </Style>
         );
     }
@@ -52,5 +73,5 @@ class Container extends React.Component {
 
 export default connect(
     state => ({game:state.game, }),
-    { setGame,selectGame,navigate,selectCard }
+    { setGame,selectGame,navigate,selectCard,addAdCount,resetAdCount }
 )(Container);

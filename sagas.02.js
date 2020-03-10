@@ -89,8 +89,8 @@ function* judge(){
             if(f===true){
                 const secs = yield select(state => state.secs);
                 yield put({type:CounterAction.PAUSE_COUNTER});
-                yield put({type:ActionType.ADD_SCORE,payload:question.length-4});
-                yield put({type:CounterAction.START_COUNTER,payload:{secs:secs+question.length}});
+                yield put({type:ActionType.ADD_SCORE,payload:(question.length-4)*2});
+                yield put({type:CounterAction.START_COUNTER,payload:{secs:secs+(question.length-4)*2}});
                 yield setAnswer();
                 break;
             }
@@ -114,13 +114,12 @@ function* judge(){
 
 export default function* setGame(){
     yield put({type:CounterAction.START_COUNTER,payload:{secs:59}});
-    const task = yield fork(setAnswer);
+    let task = yield fork(setAnswer);
     const { type } = yield take([ActionType.FINISH_GAME,ActionType.PAUSE_GAME]);
-    if(type === ActionType.PAUSE_GAME){
-        yield cancel(task);
-    }
-    else{
+    const canc = yield cancel(task);
+    if(type === ActionType.FINISH_GAME){
         const navigate = yield select(state => state.navigate);
         yield navigate("Finish");
     }
+    yield cancel(canc);
 }

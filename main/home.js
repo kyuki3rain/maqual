@@ -12,6 +12,7 @@ const Body = styled.View`
     flex-direction:column;
     justify-content:center;
     align-items:center;
+    position:relative;
 `;
 
 const Logo = styled.Image`
@@ -50,7 +51,7 @@ class Container extends React.Component {
     render() {
         return (
         <Body>
-            <Logo source={require("../assets/logo2.png")} resizeMode="contain"></Logo>
+            <Logo source={require("../assets/logo1.png")} resizeMode="contain"></Logo>
             <Menu>
                 {/* <Button onPress={() => this.props.setGame()}>
                     <Texts>start</Texts>

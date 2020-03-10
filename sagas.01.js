@@ -59,7 +59,11 @@ function* setFormula(){
     const questionArray = yield select(state => state.gameStates.questionArray);
     const res = <Texts fontSize={(question.length<=8)?10:Math.floor(80/question.length)}>{answer.slice(0,questionArray[order])}<Text>_</Text>{question.slice(questionArray[order]+1,question.length)}</Texts>;
     yield put({type:ActionType.SET_FORMULA,payload:res,order});
-    yield judge();
+    try{
+        yield judge();
+    }
+    finally{
+    }
 }
 
 function* judge(){
@@ -70,14 +74,13 @@ function* judge(){
         const answer = yield select(state => state.gameStates.answer);
         const questionArray = yield select(state => state.gameStates.questionArray);
         const secs = yield select(state => state.secs);
-
-        if(secs<0)yield put({type:ActionType.FINISH_GAME});
+        let lev = yield select(state => state.level);
         
         if(answer[questionArray[order]]==value){
             if(questionArray.length===order+1){
                 yield put({type:ActionType.PUSH_SCORE});
                 yield put({type:CounterAction.PAUSE_COUNTER});
-                yield put({type:CounterAction.START_COUNTER,payload:{secs:secs+1}});
+                yield put({type:CounterAction.START_COUNTER,payload:{secs:secs+lev}});
                 yield setAnswer();
                 break;
             }
@@ -89,7 +92,12 @@ function* judge(){
         }
         else{
             yield put({type:CounterAction.PAUSE_COUNTER});
-            yield put({type:CounterAction.START_COUNTER,payload:{secs:secs-1}});
+            if(secs>0){
+                yield put({type:CounterAction.START_COUNTER,payload:{secs:secs-1}});
+            }
+            else{
+                yield put({type:ActionType.FINISH_GAME});
+            }
         }
         // console.log("これがひとつならいーんだけどね")
     }while(true);
@@ -97,13 +105,12 @@ function* judge(){
 
 export default function* setGame(){
     yield put({type:CounterAction.START_COUNTER,payload:{secs:9}});
-    const task = yield fork(setAnswer);
-    const { type } = yield take([ActionType.FINISH_GAME,ActionType.SET_GAME]);
-    if(type === ActionType.SET_GAME){
-        yield cancel(task);
-    }
-    else{
+    let task = yield fork(setAnswer);
+    const { type } = yield take([ActionType.FINISH_GAME,ActionType.PAUSE_GAME]);
+    const canc = yield cancel(task);
+    if(type === ActionType.FINISH_GAME){
         const navigate = yield select(state => state.navigate);
         yield navigate("Finish");
     }
+    yield cancel(canc);
 }

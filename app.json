@@ -9,11 +9,11 @@
       "android",
       "web"
     ],
-    "version": "1.0.6",
+    "version": "1.0.4",
     "orientation": "portrait",
-    "icon": "./assets/icon2.png",
+    "icon": "./assets/icon3.png",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/splash1.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -28,7 +28,23 @@
       "bundleIdentifier": "jp.kyuki3rain.maquation"
     },
     "android": {
-      "package": "jp.kyuki3rain.maquation"
+      "package": "jp.kyuki3rain.maquation",
+      "versionCode" : 3,
+      "config":{
+        "googleMobileAdsAppId": "ca-app-pub-8493044522329514~2617654120"
+      },
+      "adaptiveIcon": {
+        "backgroundColor": "#ffffff",
+        "foregroundImage": "./assets/icon3.png"
+      },
+      "permissions": [
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE"
+      ]
+    },
+    "notification": {
+      "icon": "./assets/icon3.png",
+      "color": "#ffffff"
     }
   }
 }

@@ -1,10 +1,12 @@
 import React from 'react';
 import styled from 'styled-components/native';
 import { connect } from 'react-redux';
-import {setGame,backHome,navigate } from "../actions";
-import { Text, View,Dimensions,TouchableHighlight } from 'react-native';
+import {setGame,backHome,navigate,addAdCount,resetAdCount } from "../actions";
+import { Text, View,Dimensions,TouchableHighlight,BackHandler } from 'react-native';
 import {Button} from "./common-styles";
 import Icon from 'react-native-vector-icons/MaterialIcons';
+
+import { AdMobBanner,PublisherBanner, AdMobInterstitial, AdMobRewarded } from "expo-ads-admob";
 
 const Body = styled.View`
     flex:1;
@@ -31,14 +33,20 @@ const Texts = styled.Text`
     font-size:${4*Dimensions.get('screen').height/100};
 `;
 const ScoreTexts = styled.Text`
+    font-size:${10*Dimensions.get('screen').height/100};
+`;
+const DetailTexts = styled.Text`
     /* color:#fffffe; */
     text-align:center;
-    font-size:${8*Dimensions.get('screen').height/100};
+    font-size:${4*Dimensions.get('screen').height/100};
+`;
+const MainTexts = styled.View`
+    margin-top:${6*Dimensions.get('screen').height/100};
 `;
 
 const Logo = styled.View`
     width:100%;
-    height:40%;
+    height:50%;
     display:flex;
     flex-direction:column;
     justify-content:center;
@@ -52,30 +60,78 @@ const Menu = styled.View`
     flex-direction:column;
     justify-content:center;
     align-items:center;
-`;
+`
+
 
 class Container extends React.Component {
-    click(){
-        this.props.navigation.navigate(`Game${this.props.game}`);
-        this.props.setGame();
+    onPressAndroidBack = () => {
+        this.props.navigation.navigate("Select");
+        return true;
+    };
+    handleAndroidBack = () => (
+        BackHandler.addEventListener('hardwareBackPress', this.onPressAndroidBack)
+    );
+    unhandleAndroidBack = () => (
+        this.handleAndroidBack().remove()
+    );
+    componentDidMount() {
+        this.handleAndroidBack();
     }
-    back(){
+    componentWillUnmount(){
+        this.unhandleAndroidBack();
+    }
+    async click(){
+        await this.admo();
+        this.props.navigation.navigate(`Game${this.props.game}`);
+        if(this.props.count===0){
+            setTimeout(this.props.setGame,500);
+        }
+        else{
+            this.props.setGame();
+        }
+    }
+    async back(){
+        await this.admo();
         this.props.navigation.navigate("Select");
         this.props.backHome();
     }
+      async showInterstitial() {
+        AdMobInterstitial.setAdUnitID('ca-app-pub-8493044522329514/6796572285') // Test ID, Replace with your-admob-unit-id
+        await AdMobInterstitial.requestAdAsync()
+        await AdMobInterstitial.showAdAsync()
+      }
+      async admo(){
+          if(this.props.count>3){
+              await this.showInterstitial();
+              this.props.resetAdCount();
+          }
+          else{
+              this.props.addAdCount();
+          }
+      }
     static navigationOptions =({navigation}) => {
         return {
+            title:"Result",
             headerLeft: () => (
                 <TouchableHighlight onPress={() => navigation.navigate("Select")} style={{marginLeft:10}}>
-                    <Icon name="arrow-back" size={30}></Icon>
+                    <Icon name="arrow-back" size={36}></Icon>
                 </TouchableHighlight>
             ),
+            gestureEnabled: false,
         }
     }
     render() {
         return (
         <Body>
-            <Logo><ScoreTexts>score : {Math.floor(this.props.score)}</ScoreTexts></Logo>
+            <Logo>
+                <MainTexts>
+                    <DetailTexts><ScoreTexts>{Math.floor(this.props.score)}</ScoreTexts>pt</DetailTexts>
+                </MainTexts>
+                <MainTexts>
+                    <DetailTexts>world best : {Math.floor(this.props.worldScore)}pt</DetailTexts>
+                    <DetailTexts>my best : {Math.floor(this.props.mybestScore)}pt</DetailTexts>
+                </MainTexts>
+            </Logo>
             <Menu>
                 <Button onPress={() => this.click()}>
                     <Texts>restart</Texts>
@@ -90,6 +146,6 @@ class Container extends React.Component {
 }
 
 export default connect(
-    state => ({ score:state.gameStates.score,game:state.selectGame }),
-    { setGame,backHome,navigate }
+    state => ({ score:state.gameStates.score,game:state.selectGame,count:state.adCount,worldScore:state.gameStates.worldScore,mybestScore:state.gameStates.mybestScore }),
+    { setGame,backHome,navigate,addAdCount,resetAdCount }
 )(Container);

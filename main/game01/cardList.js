@@ -12,7 +12,7 @@ const Style = styled.View`
     display:flex;
     flex-direction:row;
     justify-content:center;
-    margin:${8*Dimensions.get('screen').height/100}px ${2*Dimensions.get('screen').height/100}px;
+    margin:${8*Dimensions.get('screen').height/100}px ${2*Dimensions.get('screen').height/100}px ${2*Dimensions.get('screen').height/100}px;
     /* box-sizing:border-box; */
     width:90%;
 `;
@@ -47,9 +47,7 @@ class Container extends React.Component {
         return (
             <Style>
                 <Body>
-                    {this.setCard(5,14,21,0)}
-                    {this.setCard(5,14,21,5)}
-                    {this.setCard(2,40,12,10)}
+                    {this.setCard(5,15,22.5,0)}{this.setCard(5,15,22.5,5)}
                 </Body>
             </Style>
         );
